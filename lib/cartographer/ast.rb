@@ -1,10 +1,10 @@
-require 'imperator/condition_parsing'
-require 'imperator/rule_parsing'
+require 'cartographer/condition_parsing'
+require 'cartographer/rule_parsing'
 require 'uuidtools'
 
-module Imperator
+module Cartographer
   module Ast
-    IMPERATOR_V0_NAMESPACE = UUIDTools::UUID.parse('824f34c2-e19f-11e1-82ec-c82a14fffebb')
+    CARTOGRAPHER_V0_NAMESPACE = UUIDTools::UUID.parse('11b1df5e-8563-11e2-b680-5855caf8a11b')
 
     module Identifiable
       def identity
@@ -22,7 +22,7 @@ module Imperator
       end
 
       def uuid
-        UUIDTools::UUID.sha1_create(IMPERATOR_V0_NAMESPACE, identity)
+        UUIDTools::UUID.sha1_create(CARTOGRAPHER_V0_NAMESPACE, identity)
       end
     end
 

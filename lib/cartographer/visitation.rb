@@ -1,4 +1,4 @@
-module Imperator
+module Cartographer
   module Visitation
     def visit(root, only_enter = false, level = 0, prev = nil, &block)
       yield root, level, prev, :enter

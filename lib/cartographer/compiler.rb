@@ -1,11 +1,11 @@
 require 'fiber'
-require 'imperator/ast'
-require 'imperator/visitation'
+require 'cartographer/ast'
+require 'cartographer/visitation'
 
-module Imperator
+module Cartographer
   class Compiler
-    include Imperator::Ast
-    include Imperator::Visitation
+    include Cartographer::Ast
+    include Cartographer::Visitation
 
     attr_reader :backend
     attr_reader :surveys

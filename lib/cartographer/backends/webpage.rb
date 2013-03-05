@@ -1,6 +1,6 @@
 require 'erb'
 
-module Imperator
+module Cartographer
   module Backends
     class Webpage
       attr_accessor :compiler
@@ -48,7 +48,7 @@ module Imperator
         if n.type == :other
           h << %Q{
             <label for="#{n.uuid}">Other</label>
-            <input type="text" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="imperator-answer imperator-answer-pick-one imperator-answer-other">
+            <input type="text" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="cartographer-answer cartographer-answer-pick-one cartographer-answer-other">
           }
 
           j << %Q{
@@ -60,7 +60,7 @@ module Imperator
           }
         elsif n.type == :omit
           h << %Q{
-            <input type="#{type}" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" value="#{n.uuid}" class="imperator-answer imperator-answer-pick-one imperator-answer-omit">
+            <input type="#{type}" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" value="#{n.uuid}" class="cartographer-answer cartographer-answer-pick-one cartographer-answer-omit">
             <label for="#{n.uuid}">Omit</label>
           }
 
@@ -75,7 +75,7 @@ module Imperator
           }
         else
           h << %Q{
-            <input type="#{type}" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" value="#{n.uuid}" class="imperator-answer imperator-answer-pick-one">
+            <input type="#{type}" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" value="#{n.uuid}" class="cartographer-answer cartographer-answer-pick-one">
             <label for="#{n.uuid}">#{n.text}</label>
           }
         end
@@ -110,9 +110,9 @@ module Imperator
 
       def question(n, level, parent)
         h << %Q{
-          <li data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="imperator-question">
+          <li data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="cartographer-question">
             #{n.text}
-            <ol class="imperator-answers">
+            <ol class="cartographer-answers">
         }
 
         pick = n.options[:pick]
@@ -136,11 +136,11 @@ module Imperator
 
       def section(n, level, parent)
         h << %Q{
-          <section data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="imperator-section">
+          <section data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="cartographer-section">
             <header>
               <h1>#{n.name}</h1>
             </header>
-            <ol class="imperator-questions">
+            <ol class="cartographer-questions">
         }
 
         yield
@@ -155,7 +155,7 @@ module Imperator
         start = Time.now
 
         h << %Q{
-          <article data-uuid="#{n.uuid}" class="imperator-survey">
+          <article data-uuid="#{n.uuid}" class="cartographer-survey">
             <header>
               <h1>#{n.name}</h1>
             </header>

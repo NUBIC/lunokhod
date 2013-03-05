@@ -1,4 +1,4 @@
-module Imperator
+module Cartographer
   module Backends
     class Debug
       attr_reader :buffer

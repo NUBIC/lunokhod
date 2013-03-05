@@ -1,6 +1,6 @@
-require 'imperator/ast'
+require 'cartographer/ast'
 
-module Imperator
+module Cartographer
   class Parser < BasicObject
     attr_reader :data
     attr_reader :source

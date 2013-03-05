@@ -1,7 +1,7 @@
-require 'imperator/rule_parser'
+require 'cartographer/rule_parser'
 require 'set'
 
-module Imperator
+module Cartographer
   # Rules are chains of condition tags joined by ANDs and ORs.
   # Parentheses may be used to modify precedence.
   #

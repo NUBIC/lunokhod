@@ -1,7 +1,7 @@
-require 'imperator/ast'
-require 'imperator/visitation'
+require 'cartographer/ast'
+require 'cartographer/visitation'
 
-module Imperator
+module Cartographer
   class Verifier
     include Ast
     include Visitation
