@@ -151,11 +151,6 @@ module Cartographer
       @current_answer = old_answer
     end
 
-    # Bailout method.
-    def _wtf(object)
-      ::Kernel.raise "Don't know how to associate #{object.class}"
-    end
-
     # Current line in the survey.
     def sline
       ::Kernel.caller(1).detect { |l| l.include?(source) }.split(':')[1]
