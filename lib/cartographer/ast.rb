@@ -26,7 +26,18 @@ module Cartographer
       end
     end
 
+    module CommonOptions
+      %w(help_text custom_class display_type pick).each do |m|
+        class_eval <<-END
+          def #{m}
+            options[:#{m}]
+          end
+        END
+      end
+    end
+
     class Survey < Struct.new(:line, :name, :options, :sections, :translations, :source)
+      include CommonOptions
       include Identifiable
 
       attr_accessor :parent
@@ -54,6 +65,7 @@ module Cartographer
     end
 
     class Section < Struct.new(:line, :tag, :name, :options, :questions)
+      include CommonOptions
       include Identifiable
 
       attr_accessor :parent
@@ -72,6 +84,7 @@ module Cartographer
     end
 
     class Label < Struct.new(:line, :text, :tag, :options, :dependencies)
+      include CommonOptions
       include Identifiable
 
       attr_accessor :parent
@@ -88,6 +101,7 @@ module Cartographer
     end
 
     class Question < Struct.new(:line, :text, :tag, :options, :answers, :dependencies)
+      include CommonOptions
       include Identifiable
 
       attr_accessor :parent
@@ -105,6 +119,7 @@ module Cartographer
     end
 
     class Answer < Struct.new(:line, :t1, :t2, :tag, :validations, :options)
+      include CommonOptions
       include Identifiable
 
       attr_accessor :parent
@@ -163,6 +178,7 @@ module Cartographer
     end
 
     class Group < Struct.new(:line, :tag, :name, :options, :questions, :dependencies)
+      include CommonOptions
       include Identifiable
 
       attr_accessor :parent

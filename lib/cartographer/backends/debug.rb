@@ -21,6 +21,7 @@ module Cartographer
           yield
         else
           im n, "ANS #{tag(n)}: #{n.text} (#{n.uuid}, type: #{n.type})\n", level
+          im(n, "HELP TEXT: #{n.help_text}\n", level) if n.help_text
           yield
         end
       end
@@ -59,6 +60,7 @@ module Cartographer
 
       def label(n, level, parent)
         im n, "LABEL #{n.text} (#{n.uuid})\n", level
+        im(n, "HELP TEXT: #{n.help_text}\n", level) if n.help_text
         yield
       end
 
