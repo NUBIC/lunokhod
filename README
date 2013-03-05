@@ -1,11 +1,57 @@
-Imperator - after the scout comes the army
-------------------------------------------
+1. Cartographer
 
-Imperator is a bunch of hackery and investigation into a replacement for
-NUBIC's Surveyor.
+Cartographer is a set of tools for parsing and compiling Surveyor[1] surveys.
 
-I've run it at one point or another on:
+Surveyor: https://github.com/NUBIC/surveyor
 
-* Ruby 1.9.3
-* JRuby 1.6.7.2 in 1.9 mode
-* Rubinius 2.0.0dev (=> 300864cecf8a452a0b2047b32d5518930ee08184) in 1.9 mode
+2. Relationship to Surveyor
+
+Surveyor does not provide access to a survey parse tree.  It also does not
+expose any public hooks for compiling Surveyor surveys to any form except the
+form expected by Surveyor's ActionView partials and compatible views.
+
+Cartographer is a more modular design.  It provides tools to generate an AST
+of a survey, perform some basic verifications on it (e.g. checking for
+unresolvable or duplicate question references), and a compiler that provides
+hooks for various backends.  A backend that prints out the parse tree is
+provided as an example.  A backend that generates surveys as a Web page with
+Javascript providing dependency evaluation logic is in progress.
+
+Currently, Cartographer is not at feature parity with Surveyor.  Nevertheless,
+the present state of Cartographer is still useful for survey tasks where
+loading surveys into a Rails application is not necessary and/or
+time-consuming.  Tasks that generate products based on survey structure (e.g.
+generating or verifying translation files) often fall into this category.
+
+3. Development and usage
+
+You will need a Ruby 1.9 implementation; Cartographer makes heavy use of Ruby
+1.9 features, such as BasicObject and fibers.  Cartographer is known to work
+on Rubinius 2.0.0.rc1 and Ruby 1.9.3.
+
+The short version:
+
+  $ bundle install
+  $ ruby driver.rb [SURVEYOR SURVEY]
+
+By default, driver.rb will use the pretty-printer backend.  Read the backend
+and AST to see how to use the tree visitor and what properties you can access
+on each node.
+
+You can use the webpage backend by setting the BACKEND environment variable:
+
+  $ BACKEND=Webpage ruby driver.rb [SURVEY]
+
+Keep in mind, however, that the webpage backend is currently very incomplete.
+
+Cartographer does not have an automated test suite, but should.
+
+4. Authorship and license
+
+Cartographer was written by David Yip at NUBIC[2] when he wanted a faster way
+to work with Surveyor surveys.
+
+Cartographer is released under the MIT license.  See LICENSE for details.
+
+[1]: https://github.com/NUBIC/surveyor
+[2]: http://projects.nubic.northwestern.edu/
