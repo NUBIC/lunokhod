@@ -3,9 +3,7 @@ $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 require 'pp'
 require 'cartographer/backends/debug'
 require 'cartographer/backends/webpage'
-require 'cartographer/compiler'
-require 'cartographer/parser'
-require 'cartographer/verifier'
+require 'cartographer'
 
 backend = Cartographer::Backends.const_get(ENV['BACKEND'] || 'Debug')
 rev = `git rev-parse HEAD`.chomp
