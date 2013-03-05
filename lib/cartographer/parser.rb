@@ -156,7 +156,7 @@ module Cartographer
       ::Kernel.caller(1).detect { |l| l.include?(source) }.split(':')[1]
     end
 
-    # I really wish Surveyor didn't do this. :(
+    # Intercept DSL keywords that may be suffixed with tags.
     def method_missing(m, *args, &block)
       case m
       when /^q(?:uestion)?(?:_(.+))?$/
