@@ -2,8 +2,6 @@
 
 Cartographer is a set of tools for parsing and compiling Surveyor[1] surveys.
 
-Surveyor: https://github.com/NUBIC/surveyor
-
 2. Relationship to Surveyor
 
 Surveyor does not provide access to a survey parse tree.  It also does not
