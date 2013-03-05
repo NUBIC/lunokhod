@@ -1,4 +1,5 @@
 require 'cartographer/ast'
+require 'case'
 
 module Cartographer
   class Parser < BasicObject
@@ -100,9 +101,35 @@ module Cartographer
     end
 
     def _answer(tag, t1, t2 = nil, options = {})
-      answer = Ast::Answer.new(sline, t1, t2, tag.to_s)
+      answer = Ast::Answer.new(sline, nil, nil, nil, tag.to_s)
+
+      c = ::Case
+
+      case c[t1, t2]
+      when c[::String, ::NilClass]
+        answer.text = t1
+        answer.options = options
+      when c[::String, ::Hash]
+        answer.text = t1
+        answer.options = t2
+      when c[::String, ::Symbol]
+        answer.text = t1
+        answer.type = t2
+        answer.options = options
+      when c[::Symbol, ::Hash]
+        answer.type = t1
+        answer.options = t2
+      when c[::Symbol, ::NilClass]
+        answer.type = t1
+        answer.options = options
+      when c[:other, ::Symbol]
+        answer.other = true
+        answer.type = t2
+        answer.options = options
+      else ::Kernel.raise "Unknown case #{[t1, t2].inspect}"
+      end
+
       answer.parent = @current_question
-      answer.options = options
       @current_question.answers << answer
       @current_answer = answer
     end

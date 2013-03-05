@@ -118,7 +118,7 @@ module Cartographer
       end
     end
 
-    class Answer < Struct.new(:line, :t1, :t2, :tag, :validations, :options)
+    class Answer < Struct.new(:line, :text, :type, :other, :tag, :validations, :options)
       include CommonOptions
       include Identifiable
 
@@ -128,18 +128,15 @@ module Cartographer
         super
 
         self.validations ||= []
-      end
-
-      def text
-        t1.is_a?(String) ? t1 : ''
-      end
-
-      def type
-        t2 || (t1 if t1.is_a?(Symbol))
+        self.other ||= false
       end
 
       def children
         validations
+      end
+
+      def other?
+        other
       end
     end
 
