@@ -56,7 +56,7 @@ module Cartographer
       when Survey; :survey
       when Translation; :translation
       when Validation; :validation
-      else raise "Unhandled node type #{n.class}" unless m
+      else raise "Unhandled node type #{n.class}"
       end
     end
   end
