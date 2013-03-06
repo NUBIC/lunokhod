@@ -4,8 +4,8 @@ require 'cartographer/visitation'
 
 module Cartographer
   class Compiler
-    include Cartographer::Ast
-    include Cartographer::Visitation
+    include Ast
+    include Visitation
 
     attr_reader :backend
     attr_reader :surveys
