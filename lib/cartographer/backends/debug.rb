@@ -1,6 +1,7 @@
 module Cartographer
   module Backends
     class Debug
+      attr_accessor :level
       attr_reader :buffer
 
       def initialize
@@ -15,94 +16,94 @@ module Cartographer
         buffer << "PROLOGUE\n"
       end
 
-      def answer(n, level, parent)
+      def answer(n)
         if @in_grid
           @abuf << n
           yield
         else
-          im n, "ANS #{tag(n)}: #{n.text} (#{n.uuid}, type: #{n.type})\n", level
-          im(n, "HELP TEXT: #{n.help_text}\n", level) if n.help_text
+          im n, "ANS #{tag(n)}: #{n.text} (#{n.uuid}, type: #{n.type})\n"
+          im(n, "HELP TEXT: #{n.help_text}\n") if n.help_text
           yield
         end
       end
 
-      def condition(n, level, parent)
-        im n, "COND #{tag(n)}: #{n.parsed_condition.inspect}\n", level
+      def condition(n)
+        im n, "COND #{tag(n)}: #{n.parsed_condition.inspect}\n"
         yield
       end
 
-      def dependency(n, level, parent)
+      def dependency(n)
         str = rule_to_sexp(n.parsed_rule)
-        im n, "DEP #{str}\n", level
-        im n, "REFERENCED CONDS: #{n.referenced_conditions.inspect}\n", level
+        im n, "DEP #{str}\n"
+        im n, "REFERENCED CONDS: #{n.referenced_conditions.inspect}\n"
         yield
       end
 
-      def grid(n, level, parent)
-        im n, "GRID #{tag(n)} #{n.uuid} START\n", level
+      def grid(n)
+        im n, "GRID #{tag(n)} #{n.uuid} START\n"
         @in_grid = true
         @qbuf = []
         @abuf = []
         yield
         ms = @qbuf.map(&:text).map(&:length).max
-        im n, (" " * ms) + @abuf.map(&:text).join("  ") + "\n", level
-        @qbuf.each { |q| im(q, "#{q.text}\n", level) }
+        im n, (" " * ms) + @abuf.map(&:text).join("  ") + "\n"
+        @qbuf.each { |q| im(q, "#{q.text}\n") }
         @in_grid = false
-        im n, "GRID #{tag(n)} #{n.uuid} END\n", level
+        im n, "GRID #{tag(n)} #{n.uuid} END\n"
       end
 
-      def group(n, level, parent)
-        im n, "GROUP #{tag(n)}: #{n.uuid} START\n", level
-        im n, "#{n.name}\n", level
+      def group(n)
+        im n, "GROUP #{tag(n)}: #{n.uuid} START\n"
+        im n, "#{n.name}\n"
         yield
-        im n, "GROUP #{tag(n)}: #{n.uuid} END\n", level
+        im n, "GROUP #{tag(n)}: #{n.uuid} END\n"
       end
 
-      def label(n, level, parent)
-        im n, "LABEL #{n.text} (#{n.uuid})\n", level
-        im(n, "HELP TEXT: #{n.help_text}\n", level) if n.help_text
+      def label(n)
+        im n, "LABEL #{n.text} (#{n.uuid})\n"
+        im(n, "HELP TEXT: #{n.help_text}\n") if n.help_text
         yield
       end
 
-      def question(n, level, parent)
+      def question(n)
         if @in_grid
           @qbuf << n
           yield
         else
-          im n, "QUESTION #{tag(n)}: #{n.uuid} START\n", level
-          im n, "#{n.text}\n", level
+          im n, "QUESTION #{tag(n)}: #{n.uuid} START\n"
+          im n, "#{n.text}\n"
           yield
-          im n, "QUESTION #{tag(n)}: #{n.uuid} END\n", level
+          im n, "QUESTION #{tag(n)}: #{n.uuid} END\n"
         end
       end
 
-      def repeater(n, level, parent)
-        im n, "REPEATER #{tag(n)}: #{n.uuid} START\n", level
+      def repeater(n)
+        im n, "REPEATER #{tag(n)}: #{n.uuid} START\n"
         yield
-        im n, "REPEATER #{tag(n)}: #{n.uuid} END\n", level
+        im n, "REPEATER #{tag(n)}: #{n.uuid} END\n"
       end
 
-      def section(n, level, parent)
-        im n, "SECTION #{tag(n)}: #{n.name} #{n.uuid} START\n", level
+      def section(n)
+        im n, "SECTION #{tag(n)}: #{n.name} #{n.uuid} START\n"
         yield
-        im n, "SECTION #{tag(n)}: #{n.name} #{n.uuid} END\n", level
+        im n, "SECTION #{tag(n)}: #{n.name} #{n.uuid} END\n"
       end
 
-      def survey(n, level, parent)
-        im n, "SURVEY #{n.uuid} START\n", level
-        im n, "SOURCE: #{n.source}\n", level
+      def survey(n)
+        im n, "SURVEY #{n.uuid} START\n"
+        im n, "SOURCE: #{n.source}\n"
         yield
-        im n, "SURVEY #{n.uuid} END\n", level
+        im n, "SURVEY #{n.uuid} END\n"
       end
 
-      def translation(n, level, parent)
-        im n, "TRANSLATION #{n.lang} => #{n.path} (#{n.uuid})\n", level
+      def translation(n)
+        im n, "TRANSLATION #{n.lang} => #{n.path} (#{n.uuid})\n"
         yield
       end
 
-      def validation(n, level, parent)
-        im n, "VDN #{n.uuid}\n", level
-        im n, n.parsed_rule.inspect + "\n", level
+      def validation(n)
+        im n, "VDN #{n.uuid}\n"
+        im n, n.parsed_rule.inspect + "\n"
         yield
       end
 
@@ -110,7 +111,7 @@ module Cartographer
         buffer << "EPILOGUE\n"
       end
 
-      def im(n, msg, level)
+      def im(n, msg)
         buffer << sprintf("%05d", n.line) << " " << ("  " * level) << msg
       end
 

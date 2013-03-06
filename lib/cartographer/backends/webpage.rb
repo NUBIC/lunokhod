@@ -30,15 +30,15 @@ module Cartographer
       def epilogue
       end
 
-      def answer(n, level, parent, &block)
+      def answer(n, &block)
         case @qtype
-        when :radio then pick_answer('radio', n, level, parent, block)
-        when :checkbox then pick_answer('checkbox', n, level, parent, block)
+        when :radio then pick_answer('radio', n, block)
+        when :checkbox then pick_answer('checkbox', n, block)
         else yield
         end
       end
 
-      def pick_answer(type, n, level, parent, block)
+      def pick_answer(type, n, block)
         name = n.parent.uuid
 
         h << %Q{
@@ -88,27 +88,27 @@ module Cartographer
         }
       end
 
-      def condition(n, level, parent)
+      def condition(n)
         yield
       end
 
-      def dependency(n, level, parent)
+      def dependency(n)
         yield
       end
 
-      def grid(n, level, parent)
+      def grid(n)
         yield
       end
 
-      def group(n, level, parent)
+      def group(n)
         yield
       end
 
-      def label(n, level, parent)
+      def label(n)
         yield
       end
 
-      def question(n, level, parent)
+      def question(n)
         h << %Q{
           <li data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="cartographer-question">
             #{n.text}
@@ -130,11 +130,11 @@ module Cartographer
         }
       end
 
-      def repeater(n, level, parent)
+      def repeater(n)
         yield
       end
 
-      def section(n, level, parent)
+      def section(n)
         h << %Q{
           <section data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="cartographer-section">
             <header>
@@ -151,7 +151,7 @@ module Cartographer
         }
       end
 
-      def survey(n, level, parent)
+      def survey(n)
         start = Time.now
 
         h << %Q{
@@ -171,11 +171,11 @@ module Cartographer
         @elapsed = done - start
       end
 
-      def translation(n, level, parent)
+      def translation(n)
         yield
       end
 
-      def validation(n, level, parent)
+      def validation(n)
         yield
       end
 

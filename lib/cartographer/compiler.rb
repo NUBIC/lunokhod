@@ -23,10 +23,11 @@ module Cartographer
       surveys.each do |s|
         visit(s) do |n, level, prev, boundary|
           m = backend_method_for(n)
+          backend.level = level
 
           if boundary == :enter
             co = Fiber.new do
-              backend.send(m, n, level, prev) do
+              backend.send(m, n) do
                 stack << Fiber.current
                 Fiber.yield
               end
