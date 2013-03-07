@@ -1,8 +1,8 @@
 require 'fiber'
-require 'cartographer/ast'
-require 'cartographer/visitation'
+require 'lunokhod/ast'
+require 'lunokhod/visitation'
 
-module Cartographer
+module Lunokhod
   class Compiler
     include Ast
     include Visitation

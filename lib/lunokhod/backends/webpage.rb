@@ -1,6 +1,6 @@
 require 'erb'
 
-module Cartographer
+module Lunokhod
   module Backends
     class Webpage
       attr_accessor :compiler
@@ -48,7 +48,7 @@ module Cartographer
         if n.type == :other
           h << %Q{
             <label for="#{n.uuid}">Other</label>
-            <input type="text" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="cartographer-answer cartographer-answer-pick-one cartographer-answer-other">
+            <input type="text" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="lunokhod-answer lunokhod-answer-pick-one lunokhod-answer-other">
           }
 
           j << %Q{
@@ -60,7 +60,7 @@ module Cartographer
           }
         elsif n.type == :omit
           h << %Q{
-            <input type="#{type}" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" value="#{n.uuid}" class="cartographer-answer cartographer-answer-pick-one cartographer-answer-omit">
+            <input type="#{type}" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" value="#{n.uuid}" class="lunokhod-answer lunokhod-answer-pick-one lunokhod-answer-omit">
             <label for="#{n.uuid}">Omit</label>
           }
 
@@ -75,7 +75,7 @@ module Cartographer
           }
         else
           h << %Q{
-            <input type="#{type}" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" value="#{n.uuid}" class="cartographer-answer cartographer-answer-pick-one">
+            <input type="#{type}" name="#{name}" id="#{n.uuid}" data-uuid="#{n.uuid}" data-tag="#{n.tag}" value="#{n.uuid}" class="lunokhod-answer lunokhod-answer-pick-one">
             <label for="#{n.uuid}">#{n.text}</label>
           }
         end
@@ -110,9 +110,9 @@ module Cartographer
 
       def question(n)
         h << %Q{
-          <li data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="cartographer-question">
+          <li data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="lunokhod-question">
             #{n.text}
-            <ol class="cartographer-answers">
+            <ol class="lunokhod-answers">
         }
 
         pick = n.options[:pick]
@@ -136,11 +136,11 @@ module Cartographer
 
       def section(n)
         h << %Q{
-          <section data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="cartographer-section">
+          <section data-uuid="#{n.uuid}" data-tag="#{n.tag}" class="lunokhod-section">
             <header>
               <h1>#{n.name}</h1>
             </header>
-            <ol class="cartographer-questions">
+            <ol class="lunokhod-questions">
         }
 
         yield
@@ -155,7 +155,7 @@ module Cartographer
         start = Time.now
 
         h << %Q{
-          <article data-uuid="#{n.uuid}" class="cartographer-survey">
+          <article data-uuid="#{n.uuid}" class="lunokhod-survey">
             <header>
               <h1>#{n.name}</h1>
             </header>

@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
 
-require 'cartographer'
+require 'lunokhod'
 
 RSpec.configure do |c|
 end

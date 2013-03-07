@@ -1,7 +1,7 @@
-require 'cartographer/rule_parser'
+require 'lunokhod/rule_parser'
 require 'set'
 
-module Cartographer
+module Lunokhod
   # Rules are chains of condition tags joined by ANDs and ORs.
   # Parentheses may be used to modify precedence.
   #

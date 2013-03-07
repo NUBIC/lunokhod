@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'cartographer/version'
+require 'lunokhod/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "cartographer"
-  spec.version       = Cartographer::VERSION
+  spec.name          = "lunokhod"
+  spec.version       = Lunokhod::VERSION
   spec.authors       = ["David Yip"]
   spec.email         = ["yipdw@northwestern.edu"]
   spec.description   = %q{Parsing and compilation tools for Surveyor surveys}
   spec.summary       = %q{Parsing and compilation tools for Surveyor surveys}
-  spec.homepage      = "https://github.com/NUBIC/cartographer"
+  spec.homepage      = "https://github.com/NUBIC/lunokhod"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

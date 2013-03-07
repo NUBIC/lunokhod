@@ -1,4 +1,4 @@
-module Cartographer
+module Lunokhod
   # Surveyor conditions are an odd language consisting of a mix of Ruby and
   # custom operators represented as strings.  The language's only documentation
   # is its implementation.

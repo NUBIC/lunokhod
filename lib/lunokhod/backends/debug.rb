@@ -1,4 +1,4 @@
-module Cartographer
+module Lunokhod
   module Backends
     class Debug
       attr_accessor :level

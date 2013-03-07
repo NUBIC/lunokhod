@@ -1,10 +1,10 @@
-require 'cartographer/condition_parsing'
-require 'cartographer/rule_parsing'
+require 'lunokhod/condition_parsing'
+require 'lunokhod/rule_parsing'
 require 'uuidtools'
 
-module Cartographer
+module Lunokhod
   module Ast
-    CARTOGRAPHER_V0_NAMESPACE = UUIDTools::UUID.parse('11b1df5e-8563-11e2-b680-5855caf8a11b')
+    LUNOKHOD_V0_NAMESPACE = UUIDTools::UUID.parse('ecab6cb2-8755-11e2-8caf-b8f6b111aef5')
 
     module Identifiable
       def identity
@@ -22,7 +22,7 @@ module Cartographer
       end
 
       def uuid
-        UUIDTools::UUID.sha1_create(CARTOGRAPHER_V0_NAMESPACE, identity)
+        UUIDTools::UUID.sha1_create(LUNOKHOD_V0_NAMESPACE, identity)
       end
     end
 

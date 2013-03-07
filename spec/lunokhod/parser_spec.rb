@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Cartographer
+module Lunokhod
   describe Parser do
     let(:parser) { Parser.new(data, 'fake') }
     let(:ast) { parser.surveys.first }

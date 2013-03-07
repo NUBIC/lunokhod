@@ -1,7 +1,7 @@
-require 'cartographer/verifier'
+require 'lunokhod/verifier'
 require 'stringio'
 
-module Cartographer
+module Lunokhod
   class ErrorReport
     attr_reader :errors
     attr_reader :surveys

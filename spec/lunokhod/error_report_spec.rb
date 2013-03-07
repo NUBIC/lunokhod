@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Cartographer
+module Lunokhod
   describe ErrorReport do
     let(:ep) { ErrorReport.new(surveys) }
     let(:surveys) { p = Parser.new(data); p.parse; p.surveys }

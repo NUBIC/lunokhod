@@ -1,5 +1,5 @@
 * Implement proper operator precedence for dependencies (see
-  lib/cartographer/rule_parsing.rb)
+  lib/lunokhod/rule_parsing.rb)
 * Test suite
 * Webpage generator
 * Ruby program generator (to be used in tandem with the webpage for server-side

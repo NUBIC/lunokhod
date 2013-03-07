@@ -1,7 +1,7 @@
-require 'cartographer/ast'
+require 'lunokhod/ast'
 require 'case'
 
-module Cartographer
+module Lunokhod
   class Parser < BasicObject
     attr_reader :data
     attr_reader :source
