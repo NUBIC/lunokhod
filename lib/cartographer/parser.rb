@@ -101,37 +101,32 @@ module Cartographer
     end
 
     def _answer(tag, t1, t2 = nil, options = {})
-      answer = Ast::Answer.new(sline, nil, nil, nil, tag.to_s)
-
-      c = ::Case
-
-      case c[t1, t2]
-      when c[::String, ::NilClass]
-        answer.text = t1
-        answer.options = options
-      when c[::String, ::Hash]
-        answer.text = t1
-        answer.options = t2
-      when c[::String, ::Symbol]
-        answer.text = t1
-        answer.type = t2
-        answer.options = options
-      when c[::Symbol, ::Hash]
-        answer.type = t1
-        answer.options = t2
-      when c[::Symbol, ::NilClass]
-        answer.type = t1
-        answer.options = options
-      when c[:other, ::Symbol]
-        answer.other = true
-        answer.type = t2
-        answer.options = options
-      else ::Kernel.raise "Unknown case #{[t1, t2].inspect}"
-      end
+      text, type, other, options = _disambiguate_answer(t1, t2, options)
+      answer = Ast::Answer.new(sline, text, type, other, tag.to_s, [], options)
 
       answer.parent = @current_question
       @current_question.answers << answer
       @current_answer = answer
+    end
+
+    def _disambiguate_answer(t1, t2, options)
+      c = ::Case
+
+      case c[t1, t2]
+      when c[::String, ::NilClass]
+        [t1, nil, false, options]     # text, type, other, options
+      when c[::String, ::Hash]
+        [t1, nil, false, t2]
+      when c[::String, ::Symbol]
+        [t1, t2, false, options]
+      when c[::Symbol, ::Hash]
+        [nil, t1, false, t2]
+      when c[::Symbol, ::NilClass]
+        [nil, t1, false, options]
+      when c[:other, ::Symbol]
+        [nil, t2, true, options]
+      else ::Kernel.raise "Unknown case #{[t1, t2].inspect}"
+      end
     end
 
     def _condition(label, *predicate)
