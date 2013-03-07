@@ -10,28 +10,22 @@ module Cartographer
     attr_reader :atag_expectations
     attr_reader :by_qref
     attr_reader :ctag_count
-    attr_reader :errors
     attr_reader :qtag_count
     attr_reader :qtag_expectations
-    attr_reader :surveys
+    attr_reader :survey
 
-    def initialize(surveys)
+    def initialize(survey)
       @atag_count = Hash.new(0)
       @atag_expectations = Hash.new(0)
       @by_qref = {}
       @ctag_count = Hash.new(0)
-      @errors = []
       @qtag_count = Hash.new(0)
       @qtag_expectations = Hash.new(0)
-      @surveys = surveys
+      @survey = survey
     end
 
-    def verify
-      surveys.map { |s| verify_survey(s) }.all?
-    end
-
-    def verify_survey(s)
-      visit(s, true) do |n, level, prev, boundary|
+    def run(&block)
+      visit(survey, true) do |n, level, prev, boundary|
         case n
         when Condition; inspect_condition(n)
         when Dependency, Validation; inspect_conditional(n)
@@ -39,9 +33,7 @@ module Cartographer
         end
       end
 
-      run_checks
-
-      errors.empty?
+      run_checks(&block)
     end
 
     # When we see a question:
@@ -55,7 +47,7 @@ module Cartographer
     end
 
     # There are three references in conditions that we have to worry about:
-    # 
+    #
     # - the question ref, if one exists
     # - the answer ref, if one exists
     # - the condition tag
@@ -85,32 +77,25 @@ module Cartographer
 
     # Find all unsatisfied expectations.
     def run_checks
-      find_bad_refs
-      find_duplicate_refs
-    end
-    
-    def find_bad_refs
       bad_refs(qtag_count) do |qt|
-        errors << Error.new(Question, :bad_ref, qt, qtag_expectations[qt])
+        yield Error.new(survey, Question, :bad_ref, qt, qtag_expectations[qt])
       end
 
       bad_refs(atag_count) do |qt, at|
-        errors << Error.new(Answer, :bad_ref, at, atag_expectations[[qt, at]])
+        yield Error.new(survey, Answer, :bad_ref, at, atag_expectations[[qt, at]])
       end
 
       bad_refs(ctag_count) do |c, tag|
-        errors << Error.new(Condition, :bad_ref, tag, c)
+        yield Error.new(survey, Condition, :bad_ref, tag, c)
+      end
+
+      by_qref.select { |k, v| v.length > 1 }.each do |k, vs|
+        yield Error.new(survey, Question, :duplicate_qref, k, vs)
       end
     end
 
     def bad_refs(refs)
       refs.each { |k, c| yield k if c < 1 }
-    end
-
-    def find_duplicate_refs
-      by_qref.select { |k, v| v.length > 1 }.each do |k, vs|
-        errors << Error.new(Question, :duplicate_qref, k, vs)
-      end
     end
 
     def index_question(q)
@@ -145,7 +130,26 @@ module Cartographer
       end
     end
 
-    class Error < Struct.new(:node_type, :error_type, :key, :at_fault)
+    class Error < Struct.new(:survey, :node_type, :error_type, :key, :at_fault)
+      def bad_question_tag?
+        bad_tag? && node_type == Ast::Question
+      end
+
+      def bad_answer_tag?
+        bad_tag? && node_type == Ast::Answer
+      end
+
+      def bad_condition?
+        bad_tag? && node_type == Ast::Condition
+      end
+
+      def duplicate_question?
+        error_type == :duplicate_qref
+      end
+
+      def bad_tag?
+        error_type == :bad_ref
+      end
     end
   end
 end

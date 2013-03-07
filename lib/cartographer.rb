@@ -1,3 +1,3 @@
 require 'cartographer/compiler'
 require 'cartographer/parser'
-require 'cartographer/verifier'
+require 'cartographer/error_report'

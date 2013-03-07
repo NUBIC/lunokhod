@@ -7,7 +7,7 @@ module Cartographer
     attr_reader :source
     attr_reader :surveys
 
-    def initialize(data, source)
+    def initialize(data, source = '(input)')
       @data = data
       @source = source
       @surveys = []
