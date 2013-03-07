@@ -30,15 +30,15 @@ on Rubinius 2.0.0.rc1 and Ruby 1.9.3.
 The short version:
 
   $ bundle install
-  $ ruby driver.rb [SURVEYOR SURVEY]
+  $ ruby bin/lunokhod-driver [SURVEYOR SURVEY]
 
-By default, driver.rb will use the pretty-printer backend.  Read the backend
-and AST to see how to use the tree visitor and what properties you can access
-on each node.
+By default, lunokhod-driver will use the pretty-printer backend.  Read the
+backend and AST to see how to use the tree visitor and what properties you can
+access on each node.
 
 You can use the webpage backend by setting the BACKEND environment variable:
 
-  $ BACKEND=Webpage ruby driver.rb [SURVEY]
+  $ BACKEND=Webpage ruby bin/lunokhod-driver [SURVEY]
 
 Keep in mind, however, that the webpage backend is currently very incomplete.
 
