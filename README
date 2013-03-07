@@ -36,6 +36,10 @@ By default, lunokhod-driver will use the pretty-printer backend.  Read the
 backend and AST to see how to use the tree visitor and what properties you can
 access on each node.
 
+Survey data may be piped in over standard input:
+
+  $ cat kitchen_sink_survey.rb | bin/lunokhod-driver
+
 You can use the webpage backend by setting the BACKEND environment variable:
 
   $ BACKEND=Webpage ruby bin/lunokhod-driver [SURVEY]

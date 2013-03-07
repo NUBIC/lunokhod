@@ -10,10 +10,11 @@ backend = Lunokhod::Backends.const_get(ENV['BACKEND'] || 'Debug')
 rev = `git rev-parse HEAD`.chomp
 puts "Lunokhod #{rev} - backend: #{backend}"
 
-file = File.expand_path("../#{ARGV[0]}", __FILE__)
-data = File.read(file)
+file = ARGV[0]
 
-p = Lunokhod::Parser.new(data, file)
+data = file ? File.read(file) : $stdin.read
+
+p = Lunokhod::Parser.new(data, file || '(stdin)')
 p.parse
 
 ep = Lunokhod::ErrorReport.new(p.surveys)
