@@ -116,7 +116,13 @@ module Lunokhod
       end
 
       def tag(n)
-        n.tag.empty? ? '(no tag)' : n.tag
+        set_tag = n.tag.empty? ? '(no tag)' : n.tag
+
+        if n.respond_to?(:surveyor_tag)
+          "#{set_tag} (Surveyor tag interpretation: #{n.surveyor_tag.inspect})"
+        else
+          set_tag
+        end
       end
 
       def rule_to_sexp(rule)

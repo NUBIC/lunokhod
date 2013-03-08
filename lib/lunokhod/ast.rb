@@ -27,12 +27,32 @@ module Lunokhod
     end
 
     module CommonOptions
-      %w(help_text custom_class display_type pick).each do |m|
+      %w(help_text custom_class display_type pick reference_identifier).each do |m|
         class_eval <<-END
           def #{m}
             options[:#{m}]
           end
         END
+      end
+    end
+
+    module SurveyorTag
+      include CommonOptions
+
+      ##
+      # Surveyor interprets tags from two places:
+      #
+      # 1. the method tag
+      # 2. the :reference_identifier option
+      #
+      # This override is not intentional; it's just that the method's tag and
+      # the :reference_identifier option end up in the same column in
+      # Surveyor's database.
+      #
+      # There is no documented precedence rule, but analysis of Surveyor code
+      # and experiments have shown me that #2 usually overrides #1.
+      def surveyor_tag
+        reference_identifier || tag
       end
     end
 
@@ -67,6 +87,7 @@ module Lunokhod
     class Section < Struct.new(:line, :tag, :name, :options, :questions)
       include CommonOptions
       include Identifiable
+      include SurveyorTag
 
       attr_accessor :parent
 
@@ -86,6 +107,7 @@ module Lunokhod
     class Label < Struct.new(:line, :text, :tag, :options, :dependencies)
       include CommonOptions
       include Identifiable
+      include SurveyorTag
 
       attr_accessor :parent
 
@@ -103,6 +125,7 @@ module Lunokhod
     class Question < Struct.new(:line, :text, :tag, :options, :answers, :dependencies)
       include CommonOptions
       include Identifiable
+      include SurveyorTag
 
       attr_accessor :parent
 
@@ -121,6 +144,7 @@ module Lunokhod
     class Answer < Struct.new(:line, :text, :type, :other, :tag, :validations, :options)
       include CommonOptions
       include Identifiable
+      include SurveyorTag
 
       attr_accessor :parent
 
@@ -177,6 +201,7 @@ module Lunokhod
     class Group < Struct.new(:line, :tag, :name, :options, :questions, :dependencies)
       include CommonOptions
       include Identifiable
+      include SurveyorTag
 
       attr_accessor :parent
 
