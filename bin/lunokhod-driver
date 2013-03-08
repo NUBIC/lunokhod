@@ -4,11 +4,11 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'lunokhod/backends/debug'
 require 'lunokhod/backends/webpage'
+require 'lunokhod/version'
 require 'lunokhod'
 
 backend = Lunokhod::Backends.const_get(ENV['BACKEND'] || 'Debug')
-rev = `git rev-parse HEAD`.chomp
-puts "Lunokhod #{rev} - backend: #{backend}"
+$stderr.puts "Lunokhod #{Lunokhod::VERSION} - backend: #{backend}"
 
 file = ARGV[0]
 
@@ -20,12 +20,12 @@ p.parse
 ep = Lunokhod::ErrorReport.new(p.surveys)
 ep.run
 
+if ep.errors?
+  $stderr.puts ep
+  exit 1
+end
+
 b = backend.new
 c = Lunokhod::Compiler.new(p.surveys, b)
-
 c.compile
-
 b.write
-
-puts '-' * 78
-puts ep if ep.errors?
