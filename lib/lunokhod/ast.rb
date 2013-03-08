@@ -27,7 +27,7 @@ module Lunokhod
     end
 
     module CommonOptions
-      %w(help_text custom_class display_type pick reference_identifier).each do |m|
+      %w(help_text custom_class display_type pick).each do |m|
         class_eval <<-END
           def #{m}
             options[:#{m}]
@@ -37,8 +37,6 @@ module Lunokhod
     end
 
     module SurveyorTag
-      include CommonOptions
-
       ##
       # Surveyor interprets tags from two places:
       #
@@ -52,7 +50,7 @@ module Lunokhod
       # There is no documented precedence rule, but analysis of Surveyor code
       # and experiments have shown me that #2 usually overrides #1.
       def surveyor_tag
-        reference_identifier || tag
+        options[:reference_identifier] || tag
       end
     end
 
