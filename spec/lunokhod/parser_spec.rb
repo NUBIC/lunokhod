@@ -5,6 +5,37 @@ module Lunokhod
     let(:parser) { Parser.new(data, 'fake') }
     let(:ast) { parser.surveys.first }
 
+    describe 'for repeaters' do
+      let(:data) do
+        %q{
+          survey "fake" do
+            section "one" do
+              q_a "Eh?"
+              a_y "Yes"
+
+              repeater "I'm going to ask you a bunch of questions" do
+                dependency :rule => "A"
+                condition_A :q_a, "==", :a_y
+
+                q "Who is your daddy, and what does he do?"
+                a :string
+              end
+            end
+          end
+        }
+      end
+
+      before do
+        parser.parse
+      end
+
+      let(:repeater) { ast.sections[0].questions[1] }
+
+      it 'associates repeater dependencies with the repeater' do
+        repeater.dependencies.length.should == 1
+      end
+    end
+
     describe 'for answers' do
       let(:data) do
         %q{

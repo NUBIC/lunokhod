@@ -81,6 +81,7 @@ module Lunokhod
       @current_node.questions << repeater
 
       _with_unwind do
+        @current_question = nil
         @current_node = repeater
         instance_eval(&block)
       end
