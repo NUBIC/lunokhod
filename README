@@ -25,7 +25,7 @@ generating or verifying translation files) often fall into this category.
 
 You will need a Ruby 1.9 implementation; Lunokhod makes heavy use of Ruby
 1.9 features, such as BasicObject and fibers.  Lunokhod is known to work
-on Rubinius 2.0.0.rc1 and Ruby 1.9.3.
+on Rubinius 2.0.0.rc1, JRuby 1.7.2, and Ruby 1.9.3.
 
 The short version:
 
