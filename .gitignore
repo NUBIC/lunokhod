@@ -1,3 +1,4 @@
 *.sw?
 .rbx
 Gemfile.lock
+.ruby-version
