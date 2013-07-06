@@ -57,7 +57,7 @@ module Lunokhod
     def validation(options = {})
       rule = options[:rule]
       validation = Ast::Validation.new(sline, rule)
-      validation.parent = @current_dependency
+      validation.parent = @current_answer
       validation.parse_rule
       @current_answer.validations << validation
       @current_dependency = validation
