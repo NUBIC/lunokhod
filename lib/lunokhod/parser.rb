@@ -131,7 +131,14 @@ module Lunokhod
     end
 
     def _condition(label, *predicate)
-      condition = Ast::Condition.new(sline, label, predicate)
+      condition = if @current_dependency.is_a?(Ast::Dependency)
+                    Ast::DependencyCondition.new(sline, label, predicate)
+                  elsif @current_dependency.is_a?(Ast::Validation)
+                    Ast::ValidationCondition.new(sline, label, predicate)
+                  else
+                    ::Kernel.raise "Unknown parent node #{@current_dependency.inspect} for condition"
+                  end
+
       condition.parent = @current_dependency
       condition.parse_condition
       @current_dependency.conditions << condition

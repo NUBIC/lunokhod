@@ -29,6 +29,17 @@ module Lunokhod
 
       def condition(n)
         im n, "COND #{tag(n)}: #{n.parsed_condition.inspect}\n"
+
+        if n.belongs_to_question?
+          im n, "COND #{tag(n)} BELONGS TO QUESTION\n"
+          im n, "COND #{tag(n)} PARENT: #{n.question.tag} (#{n.question.uuid})\n"
+        end
+
+        if n.belongs_to_answer?
+          im n, "COND #{tag(n)} BELONGS TO ANSWER\n"
+          im n, "COND #{tag(n)} PARENT: #{n.answer.tag} (#{n.answer.uuid})\n"
+        end
+
         yield
       end
 

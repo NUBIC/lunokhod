@@ -174,6 +174,10 @@ module Lunokhod
         self.conditions ||= []
       end
 
+      def question
+        parent
+      end
+
       def children
         conditions
       end
@@ -189,6 +193,10 @@ module Lunokhod
         super
 
         self.conditions ||= []
+      end
+
+      def answer
+        parent
       end
 
       def children
@@ -223,6 +231,34 @@ module Lunokhod
 
       def children
         []
+      end
+    end
+
+    class DependencyCondition < Condition
+      def question
+        parent.question
+      end
+
+      def belongs_to_question?
+        true
+      end
+
+      def belongs_to_answer?
+        false
+      end
+    end
+
+    class ValidationCondition < Condition
+      def answer
+        parent.answer
+      end
+
+      def belongs_to_question?
+        false
+      end
+
+      def belongs_to_answer?
+        true
       end
     end
 
