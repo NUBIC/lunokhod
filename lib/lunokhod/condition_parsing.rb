@@ -31,8 +31,13 @@ module Lunokhod
   # 2. Question 2 has more than two answers selected.
   # 3. Answer 1 for question montypython3 has string value "It is 'Arthur', King of the Britons".
   # 4. Answer a_4 for question cooling_1 is not selected.
-  # 5. The single answer for the condition's question has an integer value greater than or equal to zero.
-  # 6. The single answer for the condition's question has a regexp matching [0-9a-zA-z\. #].
+  #
+  # Forms 5 and 6 apply to validations (hence, answers), and are interpreted
+  # as follows:
+  #
+  # 5. The answer's value, as an integer, is greater than or equal to zero.
+  # 6. The answer's value, as a string, satisfies the regexp
+  #    /[0-9a-zA-z\. #]/.
   #
   # These forms correspond to the following condition nodes:
   #
