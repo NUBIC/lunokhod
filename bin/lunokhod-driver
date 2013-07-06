@@ -17,6 +17,9 @@ data = file ? File.read(file) : $stdin.read
 p = Lunokhod::Parser.new(data, file || '(stdin)')
 p.parse
 
+r = Lunokhod::Resolver.new(p.surveys)
+r.run
+
 ep = Lunokhod::ErrorReport.new(p.surveys)
 ep.run
 

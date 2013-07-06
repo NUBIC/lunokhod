@@ -160,6 +160,10 @@ module Lunokhod
       def other?
         other
       end
+
+      def question
+        parent
+      end
     end
 
     class Dependency < Struct.new(:line, :rule, :conditions)

@@ -1,3 +1,4 @@
 require 'lunokhod/compiler'
-require 'lunokhod/parser'
 require 'lunokhod/error_report'
+require 'lunokhod/parser'
+require 'lunokhod/resolver'
