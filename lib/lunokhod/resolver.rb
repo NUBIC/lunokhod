@@ -19,6 +19,16 @@ module Lunokhod
   # Once a survey is walked, Conditions are updated with the resolution
   # results.  The resolved nodes are available through the
   # #referenced_question and #referenced_answer accessors on Condition.
+  #
+  #
+  # External resolution
+  # -------------------
+  #
+  # It is possible for some nodes to undergo question/answer resolution
+  # outside the Resolver.  (For example, the SelfAnswerSatisfies condition
+  # node is capable of dereferencing its question and answer pointers.)  To
+  # avoid clobbering the results of those processes, the Resolver will only
+  # set #referenced_question if it is nil.  Ditto for #referenced_answer.
   class Resolver
     include Ast
     include Visitation
@@ -51,9 +61,11 @@ module Lunokhod
 
       pending.each do |n|
         if n.qtag
-          n.referenced_question = questions[n.qtag]
+          if n.referenced_question.nil?
+            n.referenced_question = questions[n.qtag]
+          end
 
-          if n.atag
+          if n.atag && n.referenced_answer.nil?
             n.referenced_answer = answers[[n.qtag, n.atag]]
           end
         end

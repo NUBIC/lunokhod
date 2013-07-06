@@ -35,10 +35,6 @@ module Lunokhod
       }
     end
 
-    before do
-      resolver.run
-    end
-
     def question_for(tag)
       visit(survey, true) { |n, _, _, _| break n if n.is_a?(Ast::Question) && n.tag == tag }
     end
@@ -64,6 +60,10 @@ module Lunokhod
     end
 
     describe 'for AnswerSelected conditions' do
+      before do
+        resolver.run
+      end
+
       it 'resolves question references' do
         condition_for('b', 'A').referenced_question.should == question_for('a')
       end
@@ -74,6 +74,10 @@ module Lunokhod
     end
 
     describe 'for AnswerSatisfies conditions' do
+      before do
+        resolver.run
+      end
+
       it 'resolves question references' do
         condition_for('c', 'A').referenced_question.should == question_for('a')
       end
@@ -84,8 +88,36 @@ module Lunokhod
     end
 
     describe 'for AnswerCount conditions' do
+      before do
+        resolver.run
+      end
+
       it 'resolves question references' do
         condition_for('d', 'A').referenced_question.should == question_for('b')
+      end
+    end
+
+    describe "if the condition's referenced question is already set" do
+      before do
+        condition_for('b', 'A').referenced_question = :foo
+      end
+
+      it 'does not overwrite #referenced_question' do
+        resolver.run
+
+        condition_for('b', 'A').referenced_question.should == :foo
+      end
+    end
+
+    describe "if the condition's referenced answer is already set" do
+      before do
+        condition_for('b', 'A').referenced_answer = :bar
+      end
+
+      it 'does not overwrite #referenced_answer' do
+        resolver.run
+
+        condition_for('b', 'A').referenced_answer.should == :bar
       end
     end
   end
