@@ -143,7 +143,7 @@ module Lunokhod
       end
     end
 
-    class SelfAnswerSatisfies < Struct.new(:op, :criterion, :value)
+    class SelfAnswerSatisfies < Struct.new(:op, :criterion, :value, :q, :a)
       extend Tests
 
       def self.applies?(pred)
@@ -154,15 +154,18 @@ module Lunokhod
         op = pred[0]
         cri, value = criterion(pred[1])
 
-        new(op, cri, value)
+        q = condition.question if condition.belongs_to_question?
+        a = condition.answer if condition.belongs_to_answer?
+
+        new(op, cri, value, q, a)
       end
 
       def qtag
-        nil
+        q.tag if q
       end
 
       def atag
-        nil
+        a.tag if a
       end
     end
 
