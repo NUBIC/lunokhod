@@ -1,5 +1,6 @@
 require 'lunokhod/condition_parsing'
 require 'lunokhod/rule_parsing'
+require 'forwardable'
 require 'uuidtools'
 
 module Lunokhod
@@ -228,10 +229,14 @@ module Lunokhod
     end
 
     class Condition < Struct.new(:line, :tag, :predicate)
+      extend Forwardable
       include Identifiable
       include ConditionParsing
 
       attr_accessor :parent
+      attr_accessor :referenced_question, :referenced_answer
+
+      def_delegators :parsed_condition, :qtag, :atag
 
       def children
         []

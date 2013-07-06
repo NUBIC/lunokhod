@@ -31,14 +31,18 @@ module Lunokhod
         im n, "COND #{tag(n)}: #{n.parsed_condition.inspect}\n"
 
         if n.belongs_to_question?
-          im n, "COND #{tag(n)} BELONGS TO QUESTION\n"
-          im n, "COND #{tag(n)} PARENT: #{n.question.tag} (#{n.question.uuid})\n"
+          im n, "  PARENT: QUESTION #{n.question.uuid}\n"
         end
 
         if n.belongs_to_answer?
-          im n, "COND #{tag(n)} BELONGS TO ANSWER\n"
-          im n, "COND #{tag(n)} PARENT: #{n.answer.tag} (#{n.answer.uuid})\n"
+          im n, "  PARENT: ANSWER #{n.answer.uuid}\n"
         end
+
+        refq_uuid = n.referenced_question.uuid if n.referenced_question
+        refa_uuid = n.referenced_answer.uuid if n.referenced_answer
+
+        im n, "  REFERENCED QUESTION: #{refq_uuid || '(none)'}\n"
+        im n, "  REFERENCED ANSWER: #{refa_uuid || '(none)'}\n"
 
         yield
       end
