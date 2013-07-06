@@ -84,6 +84,12 @@ module Lunokhod
       end
     end
 
+    ##
+    # An AnswerSelected condition is used for question dependencies.  It is
+    # true if the selected answers for the given question are (or are not) a
+    # subset of the question's possible answers.
+    #
+    # This condition refers to its question and answer by tag.
     class AnswerSelected < Struct.new(:qtag, :op, :atag)
       extend Normalization
       extend Tests
@@ -103,6 +109,11 @@ module Lunokhod
       end
     end
 
+    ##
+    # An AnswerCount condition tests whether the number of answers for a given
+    # question satisfies some threshold.
+    #
+    # This condition refers to its question by tag.
     class AnswerCount < Struct.new(:qtag, :op, :value)
       extend Normalization
       extend Tests
@@ -125,6 +136,15 @@ module Lunokhod
       end
     end
 
+    ##
+    # An AnswerSatisfies condition tests whether the given answer on the given
+    # question satisfies some value.
+    #
+    # The answer on the target question is specified using an
+    # :answer_reference option.  If no reference is given, the first answer
+    # for the question is used.
+    #
+    # This condition refers to its question and answer by tag.
     class AnswerSatisfies < Struct.new(:qtag, :op, :atag, :criterion, :value)
       extend Normalization
       extend Tests
@@ -143,6 +163,13 @@ module Lunokhod
       end
     end
 
+    ##
+    # A SelfAnswerSatisfies condition tests whether its answer satisfies some
+    # value.
+    #
+    # Unlike all other conditions, this one does not refer to its question and
+    # answer by tag: the existence of both are implied by the survey's syntax.
+    # However, qtag and atag readers are provided for interface consistency.
     class SelfAnswerSatisfies < Struct.new(:op, :criterion, :value, :q, :a)
       extend Tests
 
