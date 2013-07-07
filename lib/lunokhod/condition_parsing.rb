@@ -17,7 +17,7 @@ module Lunokhod
   # -------------------------------
   #
   # We find the following forms in Surveyor's kitchen sink survey:
-  # 
+  #
   # 1. :q_2, "==", :a_1
   # 2. :q_2, "count>2"
   # 3. :q_montypython3, "==", {:string_value => "It is 'Arthur', King of the Britons", :answer_reference => "1"}
@@ -45,7 +45,7 @@ module Lunokhod
   # 2. AnswerCount
   # 3. AnswerSatisfies
   # 4. AnswerSelection
-  # 5. SelfAnswerSatisfies 
+  # 5. SelfAnswerSatisfies
   # 6. SelfAnswerSatisfies
   module ConditionParsing
     OP_REGEXP = />|>=|<|<=|==|=~|!=/
@@ -68,7 +68,7 @@ module Lunokhod
       def op?(v)
         v =~ OP_REGEXP
       end
-      
+
       def aref?(v)
         v.is_a?(Symbol)
       end
@@ -158,7 +158,7 @@ module Lunokhod
         op = pred[1]
         atag = aref_as_tag(pred[2][:answer_reference] || condition.parent.answers.first.tag)
         cri, value = criterion(pred[2])
-        
+
         new(qtag, op, atag, cri, value)
       end
     end
@@ -211,7 +211,7 @@ module Lunokhod
       ns = applicable(predicate)
       raise "Ambiguous predicate: #{predicate}" if ns.length > 1
       raise "Unparseable predicate: #{predicate}" if ns.length < 1
-     
+
       # Parse it.
       @parsed_condition = ns.first.build(predicate, self)
     end

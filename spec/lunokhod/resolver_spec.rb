@@ -52,7 +52,7 @@ module Lunokhod
     def answer_for(qtag, atag)
       visit(survey, true) do |n, _, _, _|
         if n.is_a?(Ast::Answer) && \
-          n.tag == atag && 
+          n.tag == atag &&
           n.parent.tag == qtag
           break n
         end
@@ -67,7 +67,7 @@ module Lunokhod
       it 'resolves question references' do
         condition_for('b', 'A').referenced_question.should == question_for('a')
       end
- 
+
       it 'resolves answer references' do
         condition_for('b', 'A').referenced_answer.should == answer_for('a', 'y')
       end

@@ -39,7 +39,7 @@ module Lunokhod
           end
         end
       end
-      
+
       backend.epilogue
     end
 
@@ -62,4 +62,3 @@ module Lunokhod
     end
   end
 end
-

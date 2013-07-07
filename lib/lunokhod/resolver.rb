@@ -40,7 +40,7 @@ module Lunokhod
     def run
       @surveys.each { |s| resolve(s) }
     end
-    
+
     private
 
     def resolve(survey)
