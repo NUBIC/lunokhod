@@ -140,9 +140,8 @@ module Lunokhod
     # An AnswerSatisfies condition tests whether the given answer on the given
     # question satisfies some value.
     #
-    # The answer on the target question is specified using an
-    # :answer_reference option.  If no reference is given, the first answer
-    # for the question is used.
+    # The answer on the target question is specified using an :answer_reference
+    # option.  If no reference is given, an error is raised.
     #
     # This condition refers to its question and answer by tag.
     class AnswerSatisfies < Struct.new(:qtag, :op, :atag, :criterion, :value)
@@ -150,13 +149,13 @@ module Lunokhod
       extend Tests
 
       def self.applies?(pred)
-        qref?(pred[0]) && op?(pred[1]) && criterion?(pred[2])
+        qref?(pred[0]) && op?(pred[1]) && criterion?(pred[2]) && pred[2][:answer_reference]
       end
 
       def self.build(pred, condition)
         qtag = qref_as_tag(pred[0])
         op = pred[1]
-        atag = aref_as_tag(pred[2][:answer_reference] || condition.parent.answers.first.tag)
+        atag = aref_as_tag(pred[2][:answer_reference])
         cri, value = criterion(pred[2])
 
         new(qtag, op, atag, cri, value)
@@ -210,7 +209,7 @@ module Lunokhod
       # matches, it's a fatal error.
       ns = applicable(predicate)
       raise "Ambiguous predicate: #{predicate}" if ns.length > 1
-      raise "Unparseable predicate: #{predicate}" if ns.length < 1
+      raise UnparseablePredicateError, "Unparseable predicate: #{predicate}" if ns.length < 1
 
       # Parse it.
       @parsed_condition = ns.first.build(predicate, self)
@@ -218,6 +217,9 @@ module Lunokhod
 
     def applicable(predicate)
       NODES.select { |n| n.applies?(predicate) }
+    end
+
+    class UnparseablePredicateError < StandardError
     end
   end
 end
