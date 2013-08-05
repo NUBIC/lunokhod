@@ -5,6 +5,58 @@ module Lunokhod
     let(:parser) { Parser.new(data, 'fake') }
     let(:ast) { parser.surveys.first }
 
+    describe 'for surveys' do
+      let(:data) do
+        %q{
+          survey "fake" do
+            section "one" do
+            end
+          end
+        }
+      end
+
+      it 'ignores the source name when generating a survey UUID' do
+        p1 = Parser.new(data, 'p1')
+        p2 = Parser.new(data, 'p2')
+
+        p1.parse
+        p2.parse
+
+        p1.surveys.first.uuid.should == p2.surveys.first.uuid
+      end
+    end
+
+    describe 'node identification' do
+      let(:s1) do
+        %q{
+          survey "fake" do
+            section "one" do
+            end
+          end
+        }
+      end
+
+      let(:s2) do
+        %q{
+          survey "fake" do
+            # an empty line here
+            section "one" do
+            end
+          end
+        }
+      end
+
+      it 'is line-number independent' do
+        p1 = Parser.new(s1, 's1')
+        p2 = Parser.new(s2, 's2')
+
+        p1.parse
+        p2.parse
+
+        p1.surveys.first.uuid.should == p2.surveys.first.uuid
+      end
+    end
+
     describe 'for repeaters' do
       let(:data) do
         %q{

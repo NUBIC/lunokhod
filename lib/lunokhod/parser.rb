@@ -18,7 +18,7 @@ module Lunokhod
     end
 
     def survey(name, options = {}, &block)
-      survey = Ast::Survey.new(sline, name, options)
+      survey = build Ast::Survey, name, options
       survey.source = source
       @surveys << survey
 
@@ -30,7 +30,7 @@ module Lunokhod
 
     def translations(spec)
       spec.each do |lang, path|
-        translation = Ast::Translation.new(sline, lang, path)
+        translation = build Ast::Translation, lang, path
         translation.parent = @current_node
         @current_node.translations << translation
       end
@@ -38,7 +38,7 @@ module Lunokhod
 
     def dependency(options = {})
       rule = options[:rule]
-      dependency = Ast::Dependency.new(sline, rule)
+      dependency = build Ast::Dependency, rule
 
       # Does this apply to a question?  If not, we'll apply it to the current
       # node.
@@ -56,7 +56,7 @@ module Lunokhod
 
     def validation(options = {})
       rule = options[:rule]
-      validation = Ast::Validation.new(sline, rule)
+      validation = build Ast::Validation, rule
       validation.parent = @current_answer
       validation.parse_rule
       @current_answer.validations << validation
@@ -64,7 +64,7 @@ module Lunokhod
     end
 
     def _grid(tag, text, &block)
-      grid = Ast::Grid.new(sline, tag.to_s, text)
+      grid = build Ast::Grid, tag.to_s, text
       grid.parent = @current_node
       @current_node.questions << grid
 
@@ -76,7 +76,7 @@ module Lunokhod
     end
 
     def _repeater(tag, text, &block)
-      repeater = Ast::Repeater.new(sline, tag.to_s, text)
+      repeater = build Ast::Repeater, tag.to_s, text
       repeater.parent = @current_node
       @current_node.questions << repeater
 
@@ -88,14 +88,14 @@ module Lunokhod
     end
 
     def _label(tag, text, options = {})
-      question = Ast::Label.new(sline, text, tag.to_s, options)
+      question = build Ast::Label text, tag.to_s, options
       question.parent = @current_node
       @current_node.questions << question
       @current_question = question
     end
 
     def _question(tag, text, options = {})
-      question = Ast::Question.new(sline, text, tag.to_s, options)
+      question = build Ast::Question, text, tag.to_s, options
       question.parent = @current_node
       @current_node.questions << question
       @current_question = question
@@ -103,7 +103,7 @@ module Lunokhod
 
     def _answer(tag, t1, t2 = nil, options = {})
       text, type, other, options = _disambiguate_answer(t1, t2, options)
-      answer = Ast::Answer.new(sline, text, type, other, tag.to_s, [], options)
+      answer = build Ast::Answer, text, type, other, tag.to_s, [], options
 
       answer.parent = @current_question
       @current_question.answers << answer
@@ -132,9 +132,9 @@ module Lunokhod
 
     def _condition(label, *predicate)
       condition = if @current_dependency.is_a?(Ast::Dependency)
-                    Ast::DependencyCondition.new(sline, label, predicate)
+                    build Ast::DependencyCondition, label, predicate
                   elsif @current_dependency.is_a?(Ast::Validation)
-                    Ast::ValidationCondition.new(sline, label, predicate)
+                    build Ast::ValidationCondition, label, predicate
                   else
                     ::Kernel.raise "Unknown parent node #{@current_dependency.inspect} for condition"
                   end
@@ -145,7 +145,7 @@ module Lunokhod
     end
 
     def _group(tag, name = nil, options = {}, &block)
-      group = Ast::Group.new(sline, tag.to_s, name, options)
+      group = build Ast::Group, tag.to_s, name, options
       group.parent = @current_node
       @current_node.questions << group
 
@@ -157,7 +157,7 @@ module Lunokhod
     end
 
     def _section(tag, name, options = {}, &block)
-      section = Ast::Section.new(sline, tag.to_s, name, options)
+      section = build Ast::Section, tag.to_s, name, options
       section.parent = @current_node
       @current_node.sections << section
 
@@ -184,6 +184,10 @@ module Lunokhod
     # Current line in the survey.
     def sline
       ::Kernel.caller(1).detect { |l| l.include?(source) }.split(':')[1]
+    end
+
+    def build(node_class, *args)
+      node_class.new(*args).tap { |n| n.line = sline }
     end
 
     # Intercept DSL keywords that may be suffixed with tags.

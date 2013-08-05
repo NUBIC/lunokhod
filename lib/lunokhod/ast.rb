@@ -7,7 +7,37 @@ module Lunokhod
   module Ast
     LUNOKHOD_V0_NAMESPACE = UUIDTools::UUID.parse('ecab6cb2-8755-11e2-8caf-b8f6b111aef5')
 
-    module Identifiable
+    # Every AST node has an identity and a source line number.
+    #
+    # Nodes are content-addressable
+    # -----------------------------
+    #
+    # A node's identity is a v5 UUID based on the Lunokhod namespace (see
+    # LUNOKHOD_V0_NAMESPACE), the node's attributes (i.e. struct members).
+    #
+    # Changes to a node's children propagate up all the way to the root.
+    # Therefore, survey equality can be checked by only comparing the UUIDs of
+    # two survey nodes.
+    #
+    #
+    # On line number tracking
+    # -----------------------
+    #
+    # Line number tracking is useful, but we don't want it to be part of a
+    # node's identity.
+    #
+    # Why?
+    #
+    # Because these two surveys have identical content:
+    #
+    # 1   survey "foo" do           survey "foo" do
+    # 2     section "bar" do
+    # 3     end                       section "bar" do
+    # 4   end                         end
+    # 5                             end
+    module AstNode
+      attr_accessor :line
+
       def identity
         @identity ||= ident(self)
       end
@@ -55,11 +85,12 @@ module Lunokhod
       end
     end
 
-    class Survey < Struct.new(:line, :name, :options, :sections, :translations, :source)
+    class Survey < Struct.new(:name, :options, :sections, :translations)
+      include AstNode
       include CommonOptions
-      include Identifiable
 
       attr_accessor :parent
+      attr_accessor :source
 
       def initialize(*)
         super
@@ -73,8 +104,8 @@ module Lunokhod
       end
     end
 
-    class Translation < Struct.new(:line, :lang, :path)
-      include Identifiable
+    class Translation < Struct.new(:lang, :path)
+      include AstNode
 
       attr_accessor :parent
 
@@ -83,9 +114,9 @@ module Lunokhod
       end
     end
 
-    class Section < Struct.new(:line, :tag, :name, :options, :questions)
+    class Section < Struct.new(:tag, :name, :options, :questions)
+      include AstNode
       include CommonOptions
-      include Identifiable
       include SurveyorTag
 
       attr_accessor :parent
@@ -103,9 +134,9 @@ module Lunokhod
       end
     end
 
-    class Label < Struct.new(:line, :text, :tag, :options, :dependencies)
+    class Label < Struct.new(:text, :tag, :options, :dependencies)
+      include AstNode
       include CommonOptions
-      include Identifiable
       include SurveyorTag
 
       attr_accessor :parent
@@ -121,9 +152,9 @@ module Lunokhod
       end
     end
 
-    class Question < Struct.new(:line, :text, :tag, :options, :answers, :dependencies)
+    class Question < Struct.new(:text, :tag, :options, :answers, :dependencies)
+      include AstNode
       include CommonOptions
-      include Identifiable
       include SurveyorTag
 
       attr_accessor :parent
@@ -140,9 +171,9 @@ module Lunokhod
       end
     end
 
-    class Answer < Struct.new(:line, :text, :type, :other, :tag, :validations, :options)
+    class Answer < Struct.new(:text, :type, :other, :tag, :validations, :options)
+      include AstNode
       include CommonOptions
-      include Identifiable
       include SurveyorTag
 
       attr_accessor :parent
@@ -167,8 +198,8 @@ module Lunokhod
       end
     end
 
-    class Dependency < Struct.new(:line, :rule, :conditions)
-      include Identifiable
+    class Dependency < Struct.new(:rule, :conditions)
+      include AstNode
       include RuleParsing
 
       attr_accessor :parent
@@ -188,8 +219,8 @@ module Lunokhod
       end
     end
 
-    class Validation < Struct.new(:line, :rule, :conditions)
-      include Identifiable
+    class Validation < Struct.new(:rule, :conditions)
+      include AstNode
       include RuleParsing
 
       attr_accessor :parent
@@ -209,9 +240,9 @@ module Lunokhod
       end
     end
 
-    class Group < Struct.new(:line, :tag, :name, :options, :questions, :dependencies)
+    class Group < Struct.new(:tag, :name, :options, :questions, :dependencies)
+      include AstNode
       include CommonOptions
-      include Identifiable
       include SurveyorTag
 
       attr_accessor :parent
@@ -228,9 +259,9 @@ module Lunokhod
       end
     end
 
-    class Condition < Struct.new(:line, :tag, :predicate)
+    class Condition < Struct.new(:tag, :predicate)
       extend Forwardable
-      include Identifiable
+      include AstNode
       include ConditionParsing
 
       attr_accessor :parent
@@ -271,8 +302,8 @@ module Lunokhod
       end
     end
 
-    class Grid < Struct.new(:line, :tag, :text, :questions, :answers)
-      include Identifiable
+    class Grid < Struct.new(:tag, :text, :questions, :answers)
+      include AstNode
 
       attr_accessor :parent
 
@@ -288,8 +319,8 @@ module Lunokhod
       end
     end
 
-    class Repeater < Struct.new(:line, :tag, :text, :questions, :dependencies)
-      include Identifiable
+    class Repeater < Struct.new(:tag, :text, :questions, :dependencies)
+      include AstNode
 
       attr_accessor :parent
 
