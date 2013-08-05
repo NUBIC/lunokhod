@@ -255,7 +255,7 @@ module Lunokhod
       end
 
       def children
-        questions + dependencies
+        dependencies + questions
       end
     end
 
@@ -332,7 +332,7 @@ module Lunokhod
       end
 
       def children
-        questions + dependencies
+        dependencies + questions
       end
     end
   end
