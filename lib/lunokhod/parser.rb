@@ -88,7 +88,7 @@ module Lunokhod
     end
 
     def _label(tag, text, options = {})
-      question = build Ast::Label text, tag.to_s, options
+      question = build Ast::Label, text, tag.to_s, options
       question.parent = @current_node
       @current_node.questions << question
       @current_question = question
