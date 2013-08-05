@@ -302,7 +302,7 @@ module Lunokhod
       end
     end
 
-    class Grid < Struct.new(:tag, :text, :questions, :answers)
+    class Grid < Struct.new(:tag, :text, :questions, :answers, :dependencies)
       include AstNode
 
       attr_accessor :parent
@@ -312,10 +312,11 @@ module Lunokhod
 
         self.answers ||= []
         self.questions ||= []
+        self.dependencies ||= []
       end
 
       def children
-        questions + answers
+        dependencies + questions + answers
       end
     end
 

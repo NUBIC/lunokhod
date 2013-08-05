@@ -88,6 +88,37 @@ module Lunokhod
       end
     end
 
+    describe 'for grids' do
+      let(:data) do
+        %q{
+          survey "fake" do
+            section "one" do
+              q_a "Eh?"
+              a_y "Yes"
+
+              grid "G" do
+                dependency :rule => "A"
+                condition_A :q_a, "==", :a_y
+
+                a "1"
+                q "A"
+              end
+            end
+          end
+        }
+      end
+
+      before do
+        parser.parse
+      end
+
+      let(:grid) { ast.sections[0].questions[1] }
+
+      it 'supports grid dependencies' do
+        grid.dependencies.length.should == 1
+      end
+    end
+
     describe 'for answers' do
       let(:data) do
         %q{
