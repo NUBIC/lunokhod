@@ -11,6 +11,7 @@ module Lunokhod
       @data = data
       @source = source
       @surveys = []
+      @qseq = 0
     end
 
     def parse
@@ -64,7 +65,7 @@ module Lunokhod
     end
 
     def _grid(tag, text, &block)
-      grid = build Ast::Grid, tag.to_s, text
+      grid = build Ast::Grid, qseq, tag.to_s, text
       grid.parent = @current_node
       @current_node.questions << grid
 
@@ -76,7 +77,7 @@ module Lunokhod
     end
 
     def _repeater(tag, text, &block)
-      repeater = build Ast::Repeater, tag.to_s, text
+      repeater = build Ast::Repeater, qseq, tag.to_s, text
       repeater.parent = @current_node
       @current_node.questions << repeater
 
@@ -88,14 +89,14 @@ module Lunokhod
     end
 
     def _label(tag, text, options = {})
-      question = build Ast::Label, text, tag.to_s, options
+      question = build Ast::Label, qseq, text, tag.to_s, options
       question.parent = @current_node
       @current_node.questions << question
       @current_question = question
     end
 
     def _question(tag, text, options = {})
-      question = build Ast::Question, text, tag.to_s, options
+      question = build Ast::Question, qseq, text, tag.to_s, options
       question.parent = @current_node
       @current_node.questions << question
       @current_question = question
@@ -184,6 +185,11 @@ module Lunokhod
     # Current line in the survey.
     def sline
       ::Kernel.caller(1).detect { |l| l.include?(source) }.split(':')[1]
+    end
+
+    # Returns a fresh sequence number for questions and question-like entities.
+    def qseq
+      @qseq += 1
     end
 
     def build(node_class, *args)

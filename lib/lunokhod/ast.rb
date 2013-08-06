@@ -134,7 +134,7 @@ module Lunokhod
       end
     end
 
-    class Label < Struct.new(:text, :tag, :options, :dependencies)
+    class Label < Struct.new(:seq, :text, :tag, :options, :dependencies)
       include AstNode
       include CommonOptions
       include SurveyorTag
@@ -152,7 +152,7 @@ module Lunokhod
       end
     end
 
-    class Question < Struct.new(:text, :tag, :options, :answers, :dependencies)
+    class Question < Struct.new(:seq, :text, :tag, :options, :answers, :dependencies)
       include AstNode
       include CommonOptions
       include SurveyorTag
@@ -302,7 +302,7 @@ module Lunokhod
       end
     end
 
-    class Grid < Struct.new(:tag, :text, :questions, :answers, :dependencies)
+    class Grid < Struct.new(:seq, :tag, :text, :questions, :answers, :dependencies)
       include AstNode
 
       attr_accessor :parent
@@ -320,7 +320,7 @@ module Lunokhod
       end
     end
 
-    class Repeater < Struct.new(:tag, :text, :questions, :dependencies)
+    class Repeater < Struct.new(:seq, :tag, :text, :questions, :dependencies)
       include AstNode
 
       attr_accessor :parent

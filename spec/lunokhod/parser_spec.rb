@@ -119,6 +119,69 @@ module Lunokhod
       end
     end
 
+    describe 'for question-like entities' do
+      let(:data) do
+        %q{
+          survey "fake" do
+            section "one" do
+              q "foo"
+              a "yes"
+
+              grid "g" do
+              end
+
+              repeater "r" do
+              end
+
+              label "L"
+            end
+
+            section "two" do
+              q "foo"
+              a "yes"
+
+              grid "g" do
+              end
+
+              repeater "r" do
+              end
+
+              label "L"
+            end
+          end
+        }
+      end
+
+      let(:q1) { ast.sections[0].questions[0] }
+      let(:q2) { ast.sections[1].questions[0] }
+      let(:g1) { ast.sections[0].questions[1] }
+      let(:g2) { ast.sections[1].questions[1] }
+      let(:r1) { ast.sections[0].questions[2] }
+      let(:r2) { ast.sections[1].questions[2] }
+      let(:l1) { ast.sections[0].questions[3] }
+      let(:l2) { ast.sections[1].questions[3] }
+
+      before do
+        parser.parse
+      end
+
+      it 'generates different UUIDs for multiple occurrences of the same question' do
+        q1.uuid.should_not == q2.uuid
+      end
+
+      it 'generates different UUIDs for multiple occurrences of the same grid' do
+        g1.uuid.should_not == g2.uuid
+      end
+
+      it 'generates different UUIDs for multiple occurrences of the same repeater' do
+        r1.uuid.should_not == r2.uuid
+      end
+
+      it 'generates different UUIDs for multiple occurrences of the same label' do
+        l1.uuid.should_not == l2.uuid
+      end
+    end
+
     describe 'for answers' do
       let(:data) do
         %q{
