@@ -3,7 +3,6 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'lunokhod/backends/debug'
-require 'lunokhod/backends/webpage'
 require 'lunokhod/version'
 require 'lunokhod'
 
