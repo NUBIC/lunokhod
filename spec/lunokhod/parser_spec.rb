@@ -79,16 +79,6 @@ module Lunokhod
         p1.surveys.first.uuid.should == p2.surveys.first.uuid
       end
 
-      def condition_for(survey, qtag, ctag)
-        visit(survey, true) do |n, _, _, _|
-          if n.is_a?(Ast::Condition) && \
-            n.tag == ctag &&
-            n.parent.question.tag == qtag
-            break n
-          end
-        end
-      end
-
       it 'is type-sensitive' do
         p1 = Parser.new(s3, 's3')
         p1.parse

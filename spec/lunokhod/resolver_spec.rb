@@ -39,16 +39,6 @@ module Lunokhod
       visit(survey, true) { |n, _, _, _| break n if n.is_a?(Ast::Question) && n.tag == tag }
     end
 
-    def condition_for(qtag, ctag)
-      visit(survey, true) do |n, _, _, _|
-        if n.is_a?(Ast::Condition) && \
-          n.tag == ctag &&
-          n.parent.question.tag == qtag
-          break n
-        end
-      end
-    end
-
     def answer_for(qtag, atag)
       visit(survey, true) do |n, _, _, _|
         if n.is_a?(Ast::Answer) && \
@@ -65,11 +55,11 @@ module Lunokhod
       end
 
       it 'resolves question references' do
-        condition_for('b', 'A').referenced_question.should == question_for('a')
+        condition_for(survey, 'b', 'A').referenced_question.should == question_for('a')
       end
 
       it 'resolves answer references' do
-        condition_for('b', 'A').referenced_answer.should == answer_for('a', 'y')
+        condition_for(survey, 'b', 'A').referenced_answer.should == answer_for('a', 'y')
       end
     end
 
@@ -79,11 +69,11 @@ module Lunokhod
       end
 
       it 'resolves question references' do
-        condition_for('c', 'A').referenced_question.should == question_for('a')
+        condition_for(survey, 'c', 'A').referenced_question.should == question_for('a')
       end
 
       it 'resolves answer references' do
-        condition_for('c', 'A').referenced_answer.should == answer_for('a', 'other')
+        condition_for(survey, 'c', 'A').referenced_answer.should == answer_for('a', 'other')
       end
     end
 
@@ -93,31 +83,31 @@ module Lunokhod
       end
 
       it 'resolves question references' do
-        condition_for('d', 'A').referenced_question.should == question_for('b')
+        condition_for(survey, 'd', 'A').referenced_question.should == question_for('b')
       end
     end
 
     describe "if the condition's referenced question is already set" do
       before do
-        condition_for('b', 'A').referenced_question = :foo
+        condition_for(survey, 'b', 'A').referenced_question = :foo
       end
 
       it 'does not overwrite #referenced_question' do
         resolver.run
 
-        condition_for('b', 'A').referenced_question.should == :foo
+        condition_for(survey, 'b', 'A').referenced_question.should == :foo
       end
     end
 
     describe "if the condition's referenced answer is already set" do
       before do
-        condition_for('b', 'A').referenced_answer = :bar
+        condition_for(survey, 'b', 'A').referenced_answer = :bar
       end
 
       it 'does not overwrite #referenced_answer' do
         resolver.run
 
-        condition_for('b', 'A').referenced_answer.should == :bar
+        condition_for(survey, 'b', 'A').referenced_answer.should == :bar
       end
     end
   end
