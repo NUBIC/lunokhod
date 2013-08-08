@@ -2,6 +2,8 @@ require 'spec_helper'
 
 module Lunokhod
   describe Parser do
+    include Visitation
+
     let(:parser) { Parser.new(data, 'fake') }
     let(:ast) { parser.surveys.first }
 
@@ -46,6 +48,27 @@ module Lunokhod
         }
       end
 
+      let(:s3) do
+        %q{
+          survey "fake" do
+            section "one" do
+              q_dep "One"
+              a_num :integer
+
+              q_a "Hello"
+              a :string
+              dependency :rule => "A"
+              condition_A :q_dep, "==", { :integer_value => "0", :answer_reference => "num" }
+
+              q_b "Hello"
+              a :string
+              dependency :rule => "A"
+              condition_A :q_dep, "==", { :integer_value => 0, :answer_reference => "num" }
+            end
+          end
+        }
+      end
+
       it 'is line-number independent' do
         p1 = Parser.new(s1, 's1')
         p2 = Parser.new(s2, 's2')
@@ -54,6 +77,26 @@ module Lunokhod
         p2.parse
 
         p1.surveys.first.uuid.should == p2.surveys.first.uuid
+      end
+
+      def condition_for(survey, qtag, ctag)
+        visit(survey, true) do |n, _, _, _|
+          if n.is_a?(Ast::Condition) && \
+            n.tag == ctag &&
+            n.parent.question.tag == qtag
+            break n
+          end
+        end
+      end
+
+      it 'is type-sensitive' do
+        p1 = Parser.new(s3, 's3')
+        p1.parse
+
+        c1 = condition_for(p1.surveys.first, 'a', 'A')
+        c2 = condition_for(p1.surveys.first, 'b', 'A')
+
+        c1.uuid.should_not == c2.uuid
       end
     end
 
