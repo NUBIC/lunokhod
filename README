@@ -13,7 +13,7 @@ generate an AST of a survey, perform some basic verifications on it (e.g.
 checking for unresolvable or duplicate question references), and a compiler
 that provides hooks for various backends.  A backend that prints out the parse
 tree is provided as an example.  A backend that generates surveys as a Web page
-with Javascript providing dependency evaluation logic is in progress.
+with Javascript providing dependency evaluation logic is in progress[2].
 
 Currently, Lunokhod is not at feature parity with Surveyor.  Nevertheless,
 the present state of Lunokhod is still useful for survey tasks where
@@ -40,17 +40,11 @@ Survey data may be piped in over standard input:
 
   $ cat kitchen_sink_survey.rb | bin/lunokhod-driver
 
-You can use the webpage backend by setting the BACKEND environment variable:
-
-  $ BACKEND=Webpage ruby bin/lunokhod-driver [SURVEY]
-
-Keep in mind, however, that the webpage backend is currently very incomplete.
-
 Lunokhod does not have an automated test suite, but should.
 
 4. Authorship and license
 
-Lunokhod was written by David Yip at NUBIC[2] when he wanted a faster way
+Lunokhod was written by David Yip at NUBIC[3] when he wanted a faster way
 to work with Surveyor surveys.
 
 Lunokhod is released under the MIT license.  See LICENSE for details.
@@ -60,6 +54,7 @@ Lunokhod is released under the MIT license.  See LICENSE for details.
 How to destroy angels_, Kimbra, Little Boots, The Reign of Kindo, Dot Dot Dot.
 
 [1]: https://github.com/NUBIC/surveyor
-[2]: http://projects.nubic.northwestern.edu/
+[2]: https://github.com/NUBIC/lunokhod-html
+[3]: http://projects.nubic.northwestern.edu/
 
 # vim:ts=2:sw=2:et:tw=78
