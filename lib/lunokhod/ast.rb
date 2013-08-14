@@ -267,7 +267,7 @@ module Lunokhod
       attr_accessor :parent
       attr_accessor :referenced_question, :referenced_answer
 
-      def_delegators :parsed_condition, :qtag, :atag
+      def_delegators :parsed_condition, :qtag, :atag, :qref, :aref
 
       def children
         []

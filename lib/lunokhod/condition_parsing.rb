@@ -41,21 +41,21 @@ module Lunokhod
   #
   # These forms correspond to the following condition nodes:
   #
-  # 1. AnswerSelection
+  # 1. AnswerSelected
   # 2. AnswerCount
   # 3. AnswerSatisfies
-  # 4. AnswerSelection
+  # 4. AnswerSelected
   # 5. SelfAnswerSatisfies
   # 6. SelfAnswerSatisfies
   module ConditionParsing
     OP_REGEXP = />|>=|<|<=|==|=~|!=/
 
     module Normalization
-      def qref_as_tag(qref)
+      def qtag
         (qref =~ /q_(.*)/ ? $1 : qref).to_s
       end
 
-      def aref_as_tag(aref)
+      def atag
         (aref =~ /a_(.*)/ ? $1 : aref).to_s
       end
     end
@@ -90,9 +90,9 @@ module Lunokhod
     # subset of the question's possible answers.
     #
     # This condition refers to its question and answer by tag.
-    class AnswerSelected < Struct.new(:qtag, :op, :atag)
-      extend Normalization
+    class AnswerSelected < Struct.new(:qref, :op, :aref)
       extend Tests
+      include Normalization
 
       def self.applies?(pred)
         qref?(pred[0]) &&
@@ -101,11 +101,7 @@ module Lunokhod
       end
 
       def self.build(pred, condition)
-        qtag = qref_as_tag(pred[0])
-        op = pred[1]
-        atag = aref_as_tag(pred[2])
-
-        new(qtag, op, atag)
+        new(pred[0], pred[1], pred[2])
       end
     end
 
@@ -114,9 +110,9 @@ module Lunokhod
     # question satisfies some threshold.
     #
     # This condition refers to its question by tag.
-    class AnswerCount < Struct.new(:qtag, :op, :value)
-      extend Normalization
+    class AnswerCount < Struct.new(:qref, :op, :value)
       extend Tests
+      include Normalization
 
       COUNT = /count(#{OP_REGEXP})(\d+)/
 
@@ -125,10 +121,9 @@ module Lunokhod
       end
 
       def self.build(pred, condition)
-        qtag = qref_as_tag(pred[0])
         pred[1] =~ COUNT
 
-        new(qtag, $1, $2.to_i)
+        new(pred[0], $1, $2.to_i)
       end
 
       def atag
@@ -144,21 +139,18 @@ module Lunokhod
     # option.  If no reference is given, an error is raised.
     #
     # This condition refers to its question and answer by tag.
-    class AnswerSatisfies < Struct.new(:qtag, :op, :atag, :criterion, :value)
-      extend Normalization
+    class AnswerSatisfies < Struct.new(:qref, :op, :aref, :criterion, :value)
       extend Tests
+      include Normalization
 
       def self.applies?(pred)
         qref?(pred[0]) && op?(pred[1]) && criterion?(pred[2]) && pred[2][:answer_reference]
       end
 
       def self.build(pred, condition)
-        qtag = qref_as_tag(pred[0])
-        op = pred[1]
-        atag = aref_as_tag(pred[2][:answer_reference])
         cri, value = criterion(pred[2])
 
-        new(qtag, op, atag, cri, value)
+        new(pred[0], pred[1], pred[2][:answer_reference], cri, value)
       end
     end
 
