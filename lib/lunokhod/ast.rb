@@ -316,7 +316,7 @@ module Lunokhod
       end
 
       def children
-        dependencies + questions + answers
+        dependencies + answers + questions
       end
     end
 
