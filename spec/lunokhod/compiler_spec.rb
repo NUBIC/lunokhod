@@ -79,5 +79,26 @@ module Lunokhod
         node_class_sequence.should have_lcs([Ast::Repeater, Ast::Dependency, Ast::Question])
       end
     end
+
+    describe 'for grids' do
+      let(:data) do
+        %q{
+          survey "foo" do
+            section "bar" do
+              grid "grid" do
+                dependency :rule => "A"
+                condition_A :q_a, '==', :a_1
+                a_1 "No"
+                q_b "What"
+              end
+            end
+          end
+        }
+      end
+
+      it "visits the grid's dependencies, answers, and questions in that order" do
+        node_class_sequence.should have_lcs([Ast::Grid, Ast::Dependency, Ast::Answer, Ast::Question])
+      end
+    end
   end
 end
