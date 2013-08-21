@@ -52,11 +52,11 @@ module Lunokhod
 
     module Normalization
       def qtag
-        (qref =~ /q_(.*)/ ? $1 : qref).to_s
+        (qref =~ /q(?:uestion)?_(.*)/ ? $1 : qref).to_s
       end
 
       def atag
-        (aref =~ /a_(.*)/ ? $1 : aref).to_s
+        (aref =~ /a(?:nswer)?_(.*)/ ? $1 : aref).to_s
       end
     end
 

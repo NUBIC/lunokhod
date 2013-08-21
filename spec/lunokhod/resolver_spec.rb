@@ -110,5 +110,47 @@ module Lunokhod
         condition_for(survey, 'b', 'A').referenced_answer.should == :bar
       end
     end
+
+    describe 'synonym definition' do
+      let(:data) do
+        %q{
+          survey "foo" do
+            section "one" do
+              q_a "Some question"
+              a_y "Yes"
+              a_n "No"
+              a_other :string
+
+              q_b "Another question", :pick => :any
+              a "One"
+              a "Two"
+              dependency :rule => "A or B"
+              condition_A :question_a, "==", :answer_y
+              condition_B :a, "!=", :n
+            end
+          end
+        }
+      end
+
+      before do
+        resolver.run
+      end
+
+      it 'treats question_foo as a synonym for q_foo' do
+        condition_for(survey, 'b', 'A').referenced_question.should == question_for('a')
+      end
+
+      it 'treats answer_foo as a synonym for a_foo' do
+        condition_for(survey, 'b', 'A').referenced_answer.should == answer_for('a', 'y')
+      end
+
+      it 'treats foo as a synonym for q_foo' do
+        condition_for(survey, 'b', 'B').referenced_question.should == question_for('a')
+      end
+
+      it 'treats foo as a synonym for a_foo' do
+        condition_for(survey, 'b', 'B').referenced_answer.should == answer_for('a', 'n')
+      end
+    end
   end
 end
