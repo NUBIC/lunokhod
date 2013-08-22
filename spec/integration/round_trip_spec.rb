@@ -18,9 +18,9 @@ describe Lunokhod do
 
       Tempfile.open ('out') do |f|
         Tempfile.open ('out2') do |ff|
-          system(
-                 "BACKEND=Unparser #{driver} #{kitchen_sink_survey} > #{f.path} 2> #{dn};" +
-                 "BACKEND=Unparser #{driver} #{f.path} > #{ff.path} 2> #{dn};"+
+          system({'BACKEND' => 'Unparser'},
+                 "#{driver} #{kitchen_sink_survey} > #{f.path} 2> #{dn};" +
+                 "#{driver} #{f.path} > #{ff.path} 2> #{dn};"+
                  "diff #{f.path} #{ff.path}"
                  )
         end
